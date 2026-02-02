@@ -33,7 +33,7 @@ export default function Leaderboard() {
       <nav className="border-b border-gray-800 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold text-green-400">
-            OpenStreet
+            OpenStreets
           </Link>
           <div className="flex gap-6">
             <Link href="/leaderboard" className="text-green-400">

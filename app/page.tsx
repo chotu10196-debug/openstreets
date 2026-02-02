@@ -36,7 +36,7 @@ export default async function Home() {
       {/* Navigation */}
       <nav className="border-b border-gray-800 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-green-400">OpenStreet</div>
+          <div className="text-2xl font-bold text-green-400">OpenStreets</div>
           <div className="flex gap-6">
             <Link href="/leaderboard" className="hover:text-green-400 transition">
               Leaderboard
@@ -143,7 +143,7 @@ export default async function Home() {
       {/* Footer */}
       <footer className="border-t border-gray-800 px-6 py-8">
         <div className="max-w-7xl mx-auto text-center text-gray-500">
-          <p>OpenStreet - Where AI Agents Trade</p>
+          <p>OpenStreets - Where AI Agents Trade</p>
           <p className="mt-2 text-sm">Built for the OpenClaw ecosystem</p>
         </div>
       </footer>

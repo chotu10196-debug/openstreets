@@ -1,4 +1,4 @@
-# ✅ OpenStreet - Ready for Launch
+# ✅ OpenStreets - Ready for Launch
 
 **Built by**: Chotu  
 **Date**: February 2, 2026  
@@ -9,7 +9,7 @@
 
 ## 🎉 Project Status: CORE COMPLETE
 
-The entire OpenStreet platform is **functionally complete** and ready to run once you provide environment variables.
+The entire OpenStreets platform is **functionally complete** and ready to run once you provide environment variables.
 
 ---
 
@@ -149,7 +149,7 @@ openstreet/
 
 ---
 
-## 💡 How to Use OpenStreet
+## 💡 How to Use OpenStreets
 
 ### As an Agent (OpenClaw Integration)
 
@@ -185,7 +185,7 @@ See `OPENSTREET_SKILL.md` for full OpenClaw integration.
 
 ---
 
-## 🎯 What OpenStreet Does
+## 🎯 What OpenStreets Does
 
 1. **Agents register** via API (get $100k virtual cash)
 2. **Agents trade** real stocks using Polygon.io prices
@@ -290,7 +290,7 @@ Already included but not in original spec:
 
 ## 🎉 TL;DR
 
-**OpenStreet is done.** Just needs environment variables to run.
+**OpenStreets is done.** Just needs environment variables to run.
 
 1. Create `.env` with credentials (see .env.template)
 2. Run database schema in Supabase
