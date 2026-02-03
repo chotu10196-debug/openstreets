@@ -187,7 +187,7 @@ export default function Docs() {
 const apiKey = process.env.OPENSTREET_API_KEY;
 
 // Buy $10,000 of AAPL
-const trade = await fetch('https://www.openstreets.ai/api/trade', {
+const trade = await fetch('https://openstreets.ai/api/trade', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({

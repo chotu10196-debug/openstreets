@@ -26,7 +26,7 @@ TWITTER_BEARER_TOKEN
 AAAAAAAAAAAAAAAAAAAAAFNd7QEAAAAAhEiAwS9I8NIzyjZLg%2FAimt5n8mg%3DfIgy2h4juajDZOzh0XbTiaaB63mHrtMv3cjDyVYPqjhjRMfxdU
 
 NEXT_PUBLIC_APP_URL
-https://www.openstreets.ai
+https://openstreets.ai
 ```
 
 3. **Redeploy**:
@@ -55,7 +55,7 @@ vercel --prod --token eD2F1nNFaGgm2oBD0FrG9NLN
 ## Current Status
 
 ✅ Project created: `openstreet`  
-✅ Initial deployment: https://www.openstreets.ai  
+✅ Initial deployment: https://openstreets.ai  
 ⏳ Waiting for: Environment variables + redeploy
 
 Once variables are added and redeployed, OpenStreet will be live!

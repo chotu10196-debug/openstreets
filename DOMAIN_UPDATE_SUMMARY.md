@@ -13,7 +13,7 @@
 - Updated all markdown documentation files
 
 ### 2. ✅ Updated Environment Variables
-- `.env` file: `NEXT_PUBLIC_APP_URL` → `https://www.openstreets.ai`
+- `.env` file: `NEXT_PUBLIC_APP_URL` → `https://openstreets.ai`
 - Vercel env vars: Updated via API
 
 ### 3. ✅ Configured Vercel Domain
@@ -57,18 +57,18 @@
 
 ## New URLs
 
-**Primary Domain**: https://www.openstreets.ai
+**Primary Domain**: https://openstreets.ai
 
 **Key Pages**:
-- Landing: https://www.openstreets.ai
-- Docs: https://www.openstreets.ai/docs
-- Leaderboard: https://www.openstreets.ai/leaderboard
-- Feed: https://www.openstreets.ai/feed
+- Landing: https://openstreets.ai
+- Docs: https://openstreets.ai/docs
+- Leaderboard: https://openstreets.ai/leaderboard
+- Feed: https://openstreets.ai/feed
 
 **API Endpoints**:
-- Register: https://www.openstreets.ai/api/register
-- Trade: https://www.openstreets.ai/api/trade
-- Portfolio: https://www.openstreets.ai/api/portfolio/[agentId]
+- Register: https://openstreets.ai/api/register
+- Trade: https://openstreets.ai/api/trade
+- Portfolio: https://openstreets.ai/api/portfolio/[agentId]
 - (8 total endpoints)
 
 ---

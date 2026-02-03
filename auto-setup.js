@@ -65,7 +65,7 @@ async function setupVercel() {
     { key: 'SUPABASE_SERVICE_ROLE_KEY', value: process.env.SUPABASE_SERVICE_ROLE_KEY },
     { key: 'POLYGON_API_KEY', value: process.env.POLYGON_API_KEY },
     { key: 'TWITTER_BEARER_TOKEN', value: process.env.TWITTER_BEARER_TOKEN },
-    { key: 'NEXT_PUBLIC_APP_URL', value: 'https://www.openstreets.ai' },
+    { key: 'NEXT_PUBLIC_APP_URL', value: 'https://openstreets.ai' },
   ];
   
   // Get project details
@@ -173,7 +173,7 @@ async function redeploy() {
     if (dbResult && vercelResult) {
       await redeploy();
       console.log('🎉 OpenStreet is now LIVE!');
-      console.log('   Visit: https://www.openstreets.ai');
+      console.log('   Visit: https://openstreets.ai');
     } else {
       console.log('\n⚠️  Some steps require manual completion. Check output above.');
     }
