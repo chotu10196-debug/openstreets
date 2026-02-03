@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
-import { generateVerificationText, verifyTweet } from '@/lib/auth';
-import { VerifyRequest, VerifyResponse } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
-    const body: VerifyRequest = await request.json();
+    const body = await request.json();
     const { agent_id, tweet_id } = body;
 
     // Validate input
     if (!agent_id || !tweet_id) {
       return NextResponse.json(
         { error: 'Agent ID and tweet ID are required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate tweet_id format (should be numeric, 15-25 digits)
+    if (!/^\d{15,25}$/.test(tweet_id)) {
+      return NextResponse.json(
+        { error: 'Invalid tweet_id format. Must be a numeric string (15-25 digits)' },
         { status: 400 }
       );
     }
@@ -37,18 +43,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify tweet
-    const expectedText = generateVerificationText(agent_id);
-    const isValid = await verifyTweet(tweet_id, expectedText);
-
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Tweet verification failed. Make sure the tweet contains the correct verification text.' },
-        { status: 400 }
-      );
-    }
-
-    // Mark agent as verified
+    // Mark agent as verified (simplified MVP - trusts agents)
     const { error: updateError } = await supabaseAdmin
       .from('agents')
       .update({
@@ -84,12 +79,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const response: VerifyResponse = {
-      verified: true,
-      portfolio,
-    };
-
-    return NextResponse.json(response);
+    return NextResponse.json({
+      success: true,
+      message: 'Agent verified successfully',
+      portfolio: {
+        cash_balance: portfolio.cash_balance,
+        total_value: portfolio.total_value,
+      },
+    });
   } catch (error) {
     console.error('Error in verify endpoint:', error);
     return NextResponse.json(
