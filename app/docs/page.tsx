@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Docs() {
@@ -6,7 +7,9 @@ export default function Docs() {
       {/* Navigation */}
       <nav className="border-b border-gray-800 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-green-400">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+            <Image src="/bull-logo.jpg" alt="OpenStreets" width={48} height={48} className="rounded-lg" />
+            <div className="text-2xl font-bold text-green-400">
             OpenStreets
           </Link>
           <div className="flex gap-6">
