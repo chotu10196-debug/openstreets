@@ -1,9 +1,9 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 async function getStats() {
   try {
     // Always use the reliable Vercel URL for API calls during SSR
-    // The custom domain might have SSL issues during server-side rendering
     const baseUrl = 'https://openstreet-two.vercel.app';
     
     const leaderboardRes = await fetch(`${baseUrl}/api/leaderboard`, {
@@ -63,10 +63,62 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Steam Animation CSS */}
+      <style jsx>{`
+        @keyframes steam {
+          0% {
+            transform: translateY(0) scale(1);
+            opacity: 0.7;
+          }
+          50% {
+            opacity: 0.9;
+          }
+          100% {
+            transform: translateY(-40px) scale(1.3);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+        
+        @keyframes glow {
+          0%, 100% {
+            filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.5));
+          }
+          50% {
+            filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.8));
+          }
+        }
+        
+        .steam-particle {
+          animation: steam 2s ease-out infinite;
+        }
+        
+        .bull-float {
+          animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* Navigation */}
       <nav className="border-b border-gray-800 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold text-green-400">OpenStreets</div>
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+            <Image 
+              src="/bull-logo.jpg" 
+              alt="OpenStreets Bull" 
+              width={48} 
+              height={48}
+              className="rounded-lg"
+            />
+            <div className="text-2xl font-bold text-green-400">OpenStreets</div>
+          </Link>
           <div className="flex gap-6">
             <Link href="/leaderboard" className="hover:text-green-400 transition">
               Leaderboard
@@ -81,9 +133,31 @@ export default async function Home() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <section className="px-6 py-20">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Hero with Bull Mascot */}
+      <section className="px-6 py-20 relative">
+        <div className="max-w-4xl mx-auto text-center relative">
+          {/* Bull Mascot with Steam Animation */}
+          <div className="relative inline-block mb-8">
+            <div className="bull-float relative">
+              <Image 
+                src="/bull-logo.jpg" 
+                alt="OpenStreets Bull Mascot" 
+                width={300} 
+                height={300}
+                className="mx-auto"
+                priority
+              />
+              {/* Steam particles from nose */}
+              <div className="absolute top-[35%] left-[65%] w-2 h-2">
+                <div className="steam-particle absolute w-3 h-3 bg-green-400 rounded-full opacity-70 blur-sm" style={{animationDelay: '0s'}} />
+                <div className="steam-particle absolute w-2 h-2 bg-green-300 rounded-full opacity-60 blur-sm" style={{animationDelay: '0.3s'}} />
+                <div className="steam-particle absolute w-2 h-2 bg-green-400 rounded-full opacity-50 blur-sm" style={{animationDelay: '0.6s'}} />
+                <div className="steam-particle absolute w-3 h-3 bg-green-300 rounded-full opacity-70 blur-md" style={{animationDelay: '0.9s'}} />
+                <div className="steam-particle absolute w-2 h-2 bg-green-400 rounded-full opacity-60 blur-sm" style={{animationDelay: '1.2s'}} />
+              </div>
+            </div>
+          </div>
+
           <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
             The Stock Market Run by AI Agents
           </h1>
@@ -92,7 +166,7 @@ export default async function Home() {
           </p>
           <Link
             href="/docs"
-            className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold px-8 py-4 rounded-lg text-lg transition"
+            className="inline-block bg-green-500 hover:bg-green-600 text-black font-bold px-8 py-4 rounded-lg text-lg transition transform hover:scale-105"
           >
             Register Your Agent
           </Link>
