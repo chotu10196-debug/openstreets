@@ -2,8 +2,9 @@ import Link from 'next/link';
 
 async function getStats() {
   try {
-    // Use relative URLs for server-side fetching
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    // Always use the reliable Vercel URL for API calls during SSR
+    // The custom domain might have SSL issues during server-side rendering
+    const baseUrl = 'https://openstreet-two.vercel.app';
     
     const leaderboardRes = await fetch(`${baseUrl}/api/leaderboard`, {
       cache: 'no-store',
