@@ -1,4 +1,5 @@
 // Stock price API with Polygon.io + Yahoo Finance fallback
+// No mock data - fail if both APIs fail
 
 const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
 
@@ -7,20 +8,6 @@ export interface PolygonQuote {
   price: number;
   timestamp: number;
 }
-
-// Fallback mock prices for common tickers
-const MOCK_PRICES: Record<string, number> = {
-  'AAPL': 178.50,
-  'GOOGL': 142.30,
-  'MSFT': 415.20,
-  'AMZN': 175.80,
-  'TSLA': 248.50,
-  'NVDA': 180.34,  // Updated to match current price
-  'META': 485.60,
-  'NFLX': 595.40,
-  'SPY': 498.20,
-  'QQQ': 450.80,
-};
 
 // Try Polygon.io API
 async function getPolygonPrice(ticker: string): Promise<number> {
@@ -83,7 +70,7 @@ async function getYahooPrice(ticker: string): Promise<number> {
   }
 }
 
-// Main function with cascading fallbacks
+// Main function: Polygon → Yahoo → Fail
 export async function getCurrentPrice(ticker: string): Promise<number> {
   const upperTicker = ticker.toUpperCase();
   
@@ -94,30 +81,23 @@ export async function getCurrentPrice(ticker: string): Promise<number> {
       console.log(`✅ Polygon price for ${upperTicker}: $${price}`);
       return price;
     } catch (polygonError) {
-      console.warn(`⚠️ Polygon failed for ${upperTicker}, trying Yahoo Finance...`);
+      console.warn(`⚠️ Polygon failed for ${upperTicker}:`, polygonError);
     }
+  } else {
+    console.warn('⚠️ POLYGON_API_KEY not configured, skipping Polygon');
   }
   
   // Try 2: Yahoo Finance (free, no API key)
   try {
     const price = await getYahooPrice(upperTicker);
-    console.log(`✅ Yahoo price for ${upperTicker}: $${price}`);
+    console.log(`✅ Yahoo Finance price for ${upperTicker}: $${price}`);
     return price;
   } catch (yahooError) {
-    console.warn(`⚠️ Yahoo Finance failed for ${upperTicker}, using mock prices...`);
+    console.error(`❌ Yahoo Finance failed for ${upperTicker}:`, yahooError);
   }
   
-  // Try 3: Mock prices (hardcoded for common tickers)
-  if (MOCK_PRICES[upperTicker]) {
-    console.log(`✅ Mock price for ${upperTicker}: $${MOCK_PRICES[upperTicker]}`);
-    return MOCK_PRICES[upperTicker];
-  }
-  
-  // Try 4: Generated price based on ticker (last resort)
-  const hash = upperTicker.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-  const generatedPrice = 50 + (hash % 450); // $50-$500
-  console.log(`✅ Generated price for ${upperTicker}: $${generatedPrice}`);
-  return generatedPrice;
+  // Both failed - throw error
+  throw new Error(`Failed to fetch price for ${upperTicker}. Both Polygon.io and Yahoo Finance are unavailable.`);
 }
 
 export async function getBatchPrices(tickers: string[]): Promise<Map<string, number>> {
@@ -130,9 +110,8 @@ export async function getBatchPrices(tickers: string[]): Promise<Map<string, num
         const price = await getCurrentPrice(ticker);
         prices.set(ticker, price);
       } catch (error) {
-        console.error(`Error fetching price for ${ticker}:`, error);
-        // Use fallback
-        prices.set(ticker, 100);
+        console.error(`Failed to get price for ${ticker}:`, error);
+        // Don't add to map - will be handled by caller
       }
     })
   );
