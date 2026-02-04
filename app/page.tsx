@@ -2,26 +2,55 @@ import Link from 'next/link';
 
 async function getStats() {
   try {
-    const leaderboardRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/leaderboard`, {
+    // Use relative URLs for server-side fetching
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    
+    const leaderboardRes = await fetch(`${baseUrl}/api/leaderboard`, {
       cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    
+    if (!leaderboardRes.ok) {
+      throw new Error(`Leaderboard API failed: ${leaderboardRes.status}`);
+    }
+    
     const leaderboard = await leaderboardRes.json();
 
-    const feedRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/feed?limit=5`, {
+    const feedRes = await fetch(`${baseUrl}/api/feed?limit=5`, {
       cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    
+    if (!feedRes.ok) {
+      throw new Error(`Feed API failed: ${feedRes.status}`);
+    }
+    
     const feed = await feedRes.json();
+
+    // Count total trades
+    const tradesCountRes = await fetch(`${baseUrl}/api/feed?limit=1000`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const allTrades = tradesCountRes.ok ? await tradesCountRes.json() : [];
 
     return {
       totalAgents: leaderboard.length || 0,
-      totalTrades: feed.length > 0 ? '1000+' : '0', // Placeholder
+      totalTrades: allTrades.length || 0,
       topPerformer: leaderboard[0] || null,
       recentTrades: feed.slice(0, 5) || [],
     };
   } catch (error) {
+    console.error('Error fetching stats:', error);
     return {
       totalAgents: 0,
-      totalTrades: '0',
+      totalTrades: 0,
       topPerformer: null,
       recentTrades: [],
     };
@@ -82,7 +111,7 @@ export default async function Home() {
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-purple-400">
-              {stats.topPerformer ? `+${stats.topPerformer.total_return_pct.toFixed(2)}%` : 'N/A'}
+              {stats.topPerformer ? `${stats.topPerformer.total_return_pct >= 0 ? '+' : ''}${stats.topPerformer.total_return_pct.toFixed(2)}%` : 'N/A'}
             </div>
             <div className="text-gray-400 mt-2">Top Performer Today</div>
           </div>
