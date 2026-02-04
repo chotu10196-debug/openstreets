@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { getBatchPrices } from '@/lib/polygon';
 import { LeaderboardEntry } from '@/types';
 
 export async function GET(request: NextRequest) {
@@ -8,10 +9,10 @@ export async function GET(request: NextRequest) {
     const sort = searchParams.get('sort') || 'returns';
     const period = searchParams.get('period') || 'all';
 
-    // Get all verified agents with their portfolios
+    // Get all verified agents
     const { data: agents, error: agentsError } = await supabaseAdmin
       .from('agents')
-      .select('*, portfolios(*)')
+      .select('id, name, human_x_handle, agent_x_handle, verified, created_at, total_score')
       .eq('verified', true)
       .limit(100);
 
@@ -23,33 +24,62 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get all tickers to fetch prices in batch
+    const { data: allPositions } = await supabaseAdmin
+      .from('positions')
+      .select('ticker')
+      .in('agent_id', agents.map(a => a.id));
+
+    const uniqueTickers = [...new Set(allPositions?.map(p => p.ticker) || [])];
+    const prices = uniqueTickers.length > 0 ? await getBatchPrices(uniqueTickers) : new Map();
+
     // Calculate stats for each agent
     const leaderboardData = await Promise.all(
       agents.map(async (agent) => {
-        const portfolio = agent.portfolios[0];
+        // Get portfolio
+        const { data: portfolio } = await supabaseAdmin
+          .from('portfolios')
+          .select('cash_balance')
+          .eq('agent_id', agent.id)
+          .single();
         
         if (!portfolio) {
           return null;
         }
 
-        // Calculate return percentage
-        const totalReturnPct = ((portfolio.total_value - 100000) / 100000) * 100;
+        // Get positions
+        const { data: positions } = await supabaseAdmin
+          .from('positions')
+          .select('ticker, shares, avg_price')
+          .eq('agent_id', agent.id);
+
+        // Calculate total position value
+        let totalPositionValue = 0;
+        if (positions && positions.length > 0) {
+          for (const position of positions) {
+            const currentPrice = prices.get(position.ticker) || 0;
+            const positionValue = parseFloat(position.shares) * currentPrice;
+            totalPositionValue += positionValue;
+          }
+        }
+
+        // Calculate total portfolio value
+        const totalValue = portfolio.cash_balance + totalPositionValue;
+        const totalReturnPct = ((totalValue - 100000) / 100000) * 100;
 
         // Get trade stats
         const { data: trades } = await supabaseAdmin
           .from('trades')
-          .select('*')
+          .select('id')
           .eq('agent_id', agent.id);
 
-        // Calculate win rate (simplified - based on profitable positions)
+        // Calculate win rate (placeholder for now)
         let winRate = 0;
         if (trades && trades.length > 0) {
-          // This is a simplified calculation
-          // In production, you'd want to calculate actual wins vs losses
-          winRate = 50; // Placeholder
+          winRate = 50; // Placeholder - would need to calculate from closed positions
         }
 
-        // Calculate score (can be customized)
+        // Calculate score
         const score = totalReturnPct;
 
         return {
@@ -63,6 +93,7 @@ export async function GET(request: NextRequest) {
             total_score: agent.total_score,
           },
           total_return_pct: totalReturnPct,
+          total_value: totalValue,
           win_rate: winRate,
           score,
         };
@@ -73,6 +104,7 @@ export async function GET(request: NextRequest) {
     const validEntries = leaderboardData.filter((entry) => entry !== null) as Array<{
       agent: any;
       total_return_pct: number;
+      total_value: number;
       win_rate: number;
       score: number;
     }>;
