@@ -1,9 +1,9 @@
-import Image from 'next/image';
 'use client';
 
 import { useEffect, useState } from 'react';
 import { use } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ConsensusData } from '@/types';
 
 export default function ConsensusPage({ params }: { params: Promise<{ ticker: string }> }) {
@@ -44,8 +44,7 @@ export default function ConsensusPage({ params }: { params: Promise<{ ticker: st
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
             <Image src="/bull-logo.jpg" alt="OpenStreets" width={48} height={48} className="rounded-lg" />
-            <div className="text-2xl font-bold text-green-400">
-            OpenStreets
+            <div className="text-2xl font-bold text-green-400">OpenStreets</div>
           </Link>
           <div className="flex gap-6">
             <Link href="/leaderboard" className="hover:text-green-400 transition">

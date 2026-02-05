@@ -1,8 +1,8 @@
-import Image from 'next/image';
 'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { LeaderboardEntry } from '@/types';
 
 export default function Leaderboard() {
@@ -35,8 +35,7 @@ export default function Leaderboard() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
             <Image src="/bull-logo.jpg" alt="OpenStreets" width={48} height={48} className="rounded-lg" />
-            <div className="text-2xl font-bold text-green-400">
-            OpenStreets
+            <div className="text-2xl font-bold text-green-400">OpenStreets</div>
           </Link>
           <div className="flex gap-6">
             <Link href="/leaderboard" className="text-green-400">

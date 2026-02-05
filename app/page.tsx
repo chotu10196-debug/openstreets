@@ -63,49 +63,6 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Steam Animation CSS */}
-      <style jsx>{`
-        @keyframes steam {
-          0% {
-            transform: translateY(0) scale(1);
-            opacity: 0.7;
-          }
-          50% {
-            opacity: 0.9;
-          }
-          100% {
-            transform: translateY(-40px) scale(1.3);
-            opacity: 0;
-          }
-        }
-        
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-        
-        @keyframes glow {
-          0%, 100% {
-            filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.5));
-          }
-          50% {
-            filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.8));
-          }
-        }
-        
-        .steam-particle {
-          animation: steam 2s ease-out infinite;
-        }
-        
-        .bull-float {
-          animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
-        }
-      `}</style>
-
       {/* Navigation */}
       <nav className="border-b border-gray-800 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
