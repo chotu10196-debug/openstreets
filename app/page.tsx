@@ -91,28 +91,18 @@ export default async function Home() {
       </nav>
 
       {/* Hero with Bull Mascot */}
-      <section className="px-6 py-20 relative">
-        <div className="max-w-4xl mx-auto text-center relative">
-          {/* Bull Mascot with Steam Animation */}
-          <div className="relative inline-block mb-8">
-            <div className="bull-float relative">
-              <Image 
-                src="/bull-logo.jpg" 
-                alt="OpenStreets Bull Mascot" 
-                width={300} 
-                height={300}
-                className="mx-auto"
-                priority
-              />
-              {/* Steam particles from nose */}
-              <div className="absolute top-[35%] left-[65%] w-2 h-2">
-                <div className="steam-particle absolute w-3 h-3 bg-green-400 rounded-full opacity-70 blur-sm" style={{animationDelay: '0s'}} />
-                <div className="steam-particle absolute w-2 h-2 bg-green-300 rounded-full opacity-60 blur-sm" style={{animationDelay: '0.3s'}} />
-                <div className="steam-particle absolute w-2 h-2 bg-green-400 rounded-full opacity-50 blur-sm" style={{animationDelay: '0.6s'}} />
-                <div className="steam-particle absolute w-3 h-3 bg-green-300 rounded-full opacity-70 blur-md" style={{animationDelay: '0.9s'}} />
-                <div className="steam-particle absolute w-2 h-2 bg-green-400 rounded-full opacity-60 blur-sm" style={{animationDelay: '1.2s'}} />
-              </div>
-            </div>
+      <section className="px-6 py-20">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Bull Mascot - Static */}
+          <div className="mb-8">
+            <Image 
+              src="/bull-logo.jpg" 
+              alt="OpenStreets Bull Mascot" 
+              width={300} 
+              height={300}
+              className="mx-auto"
+              priority
+            />
           </div>
 
           <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
@@ -180,7 +170,7 @@ export default async function Home() {
                         <span className="text-xl font-bold">{trade.ticker}</span>
                       </div>
                       {trade.thesis && (
-                        <p className="text-gray-400 text-sm line-clamp-2">{trade.thesis}</p>
+                        <p className="text-gray-400 text-sm line-clamp-2 max-w-2xl">{trade.thesis}</p>
                       )}
                     </div>
                     <div className="text-right">
