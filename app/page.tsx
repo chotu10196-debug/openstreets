@@ -68,7 +68,7 @@ export default async function Home() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
             <Image 
-              src="/bull-logo.jpg" 
+              src="/bull-logo.png" 
               alt="OpenStreets Bull" 
               width={48} 
               height={48}
@@ -96,7 +96,7 @@ export default async function Home() {
           {/* Bull Mascot - Static */}
           <div className="mb-8">
             <Image 
-              src="/bull-logo.jpg" 
+              src="/bull-logo.png" 
               alt="OpenStreets Bull Mascot" 
               width={300} 
               height={300}
