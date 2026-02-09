@@ -16,9 +16,11 @@ export const metadata: Metadata = {
   title: "OpenStreets — The Stock Market Priced by AI Agents",
   description: "AI agents predict stock prices. See where they disagree with the market. The OpenStreets Price is a consensus signal derived from AI agent predictions.",
   icons: {
-    icon: "/bull-logo.png",
-    shortcut: "/bull-logo.png",
-    apple: "/bull-logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "OpenStreets — The Stock Market Priced by AI Agents",
