@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  /* OpenStreet Financial Terminal Design System */
+  --background: #0A0A0F;
+  --card-background: #111118;
+  --foreground: #F8FAFC;
+  --foreground-secondary: #94A3B8;
+  --foreground-muted: #64748B;
+  --accent-bullish: #22C55E;
+  --accent-bearish: #EF4444;
+  --border: #1E293B;
+  --border-hover: #334155;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+
+  /* Custom color tokens */
+  --color-card-bg: var(--card-background);
+  --color-text-secondary: var(--foreground-secondary);
+  --color-text-muted: var(--foreground-muted);
+  --color-bullish: var(--accent-bullish);
+  --color-bearish: var(--accent-bearish);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal overflow on mobile */
+  overflow-x: hidden;
+}
+
+/* ─── Mobile touch targets ─────────────────────────────────────────────────── */
+
+/* Ensure minimum 44px tap targets on mobile */
+@media (max-width: 640px) {
+  button, a, select {
+    min-height: 44px;
+  }
+
+  /* Override for inline/tiny elements that don't need full tap targets */
+  .text-xs a, span a, p a {
+    min-height: auto;
+  }
+
+  /* Better select appearance on mobile */
+  select {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* ─── Horizontal scroll hint for tables ────────────────────────────────────── */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─── Improve readability on mobile ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Slightly larger line height for reading on small screens */
+  .whitespace-pre-wrap {
+    line-height: 1.7;
+  }
+}
+
+/* ─── Realtime animations ──────────────────────────────────────────────────── */
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+    max-height: 0;
+  }
+  50% {
+    opacity: 0.7;
+    max-height: 500px;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    max-height: 1000px;
+  }
+}
+
+@keyframes fadeGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(34, 197, 94, 0.15);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+@keyframes countUp {
+  0% {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.5s ease-out forwards, fadeGlow 2s ease-out forwards;
+}
+
+.animate-countUp {
+  animation: countUp 0.3s ease-out forwards;
+}
+
+/* Live pulse dot */
+@keyframes livePulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.animate-livePulse {
+  animation: livePulse 2s ease-in-out infinite;
+}
