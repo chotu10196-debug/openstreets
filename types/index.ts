@@ -108,11 +108,16 @@ export interface FeedItem extends Trade {
 
 export interface ConsensusData {
   ticker: string;
+  consensus_price: number | null;
+  market_price: number | null;
+  divergence_pct: number | null;
+  num_predictions: number;
+  num_agents: number;
   bullish_count: number;
   bearish_count: number;
-  neutral_count: number;
-  avg_confidence: number;
-  recent_theses: (Thesis & { agent: Agent })[];
+  weighting_method: 'equal' | 'accuracy' | null;
+  calculated_at: string | null;
+  recent_predictions: (Prediction & { agent: Agent })[];
 }
 
 export interface PortfolioWithPositions extends Portfolio {

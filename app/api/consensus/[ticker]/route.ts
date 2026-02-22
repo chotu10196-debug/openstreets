@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
+import { getLatestConsensus } from '@/lib/consensus';
 import { ConsensusData } from '@/types';
 
 export async function GET(
@@ -10,9 +11,9 @@ export async function GET(
     const { ticker } = await params;
     const upperTicker = ticker.toUpperCase();
 
-    // Get all theses for this ticker
-    const { data: theses, error: thesesError } = await supabaseAdmin
-      .from('theses')
+    // Fetch active predictions with agent info
+    const { data: predictions, error: predictionsError } = await supabaseAdmin
+      .from('predictions')
       .select(`
         *,
         agents (
@@ -24,64 +25,69 @@ export async function GET(
         )
       `)
       .eq('ticker', upperTicker)
-      .order('created_at', { ascending: false })
+      .eq('status', 'active')
+      .order('submitted_at', { ascending: false })
       .limit(50);
 
-    if (thesesError) {
-      console.error('Error fetching theses:', thesesError);
+    if (predictionsError) {
+      console.error('Error fetching predictions:', predictionsError);
       return NextResponse.json(
         { error: 'Failed to fetch consensus data' },
         { status: 500 }
       );
     }
 
-    // Calculate consensus
+    // Calculate bullish/bearish counts from prediction direction
     let bullishCount = 0;
     let bearishCount = 0;
-    let neutralCount = 0;
-    let totalConfidence = 0;
-    let confidenceCount = 0;
+    const uniqueAgents = new Set<string>();
 
-    const confidenceMap: { [key: string]: number } = {
-      LOW: 1,
-      MEDIUM: 2,
-      HIGH: 3,
-    };
-
-    theses.forEach((thesis: any) => {
-      if (thesis.direction === 'BULLISH') bullishCount++;
-      else if (thesis.direction === 'BEARISH') bearishCount++;
-      else if (thesis.direction === 'NEUTRAL') neutralCount++;
-
-      if (thesis.confidence) {
-        totalConfidence += confidenceMap[thesis.confidence] || 0;
-        confidenceCount++;
-      }
+    (predictions ?? []).forEach((pred: any) => {
+      uniqueAgents.add(pred.agent_id);
+      const targetPrice = parseFloat(pred.target_price);
+      const marketPrice = parseFloat(pred.market_price_at_submission);
+      if (targetPrice > marketPrice) bullishCount++;
+      else if (targetPrice < marketPrice) bearishCount++;
     });
 
-    const avgConfidence = confidenceCount > 0 ? totalConfidence / confidenceCount : 0;
-
-    // Format theses with agent info
-    const recentTheses = theses.map((thesis: any) => ({
-      id: thesis.id,
-      agent_id: thesis.agent_id,
-      ticker: thesis.ticker,
-      direction: thesis.direction,
-      content: thesis.content,
-      confidence: thesis.confidence,
-      time_horizon: thesis.time_horizon,
-      upvotes: thesis.upvotes,
-      created_at: thesis.created_at,
-      agent: thesis.agents,
+    // Format predictions with agent info
+    const recentPredictions = (predictions ?? []).map((pred: any) => ({
+      id: pred.id,
+      agent_id: pred.agent_id,
+      ticker: pred.ticker,
+      target_price: parseFloat(pred.target_price),
+      horizon_days: pred.horizon_days,
+      submitted_at: pred.submitted_at,
+      market_price_at_submission: parseFloat(pred.market_price_at_submission),
+      resolved_at: pred.resolved_at ?? undefined,
+      actual_price_at_resolution: pred.actual_price_at_resolution
+        ? parseFloat(pred.actual_price_at_resolution)
+        : undefined,
+      prediction_error_pct: pred.prediction_error_pct
+        ? parseFloat(pred.prediction_error_pct)
+        : undefined,
+      direction_correct: pred.direction_correct ?? undefined,
+      status: pred.status,
+      rationale: pred.rationale ?? undefined,
+      confidence: pred.confidence ?? undefined,
+      agent: pred.agents,
     }));
+
+    // Read the most recent cached consensus price (calculated on prediction submission)
+    const consensusResult = await getLatestConsensus(upperTicker);
 
     const response: ConsensusData = {
       ticker: upperTicker,
+      consensus_price: consensusResult?.consensus_price ?? null,
+      market_price: consensusResult?.market_price ?? null,
+      divergence_pct: consensusResult?.divergence_pct ?? null,
+      num_predictions: predictions?.length ?? 0,
+      num_agents: uniqueAgents.size,
       bullish_count: bullishCount,
       bearish_count: bearishCount,
-      neutral_count: neutralCount,
-      avg_confidence: avgConfidence,
-      recent_theses: recentTheses,
+      weighting_method: consensusResult?.weighting_method ?? null,
+      calculated_at: consensusResult?.calculated_at ?? null,
+      recent_predictions: recentPredictions,
     };
 
     return NextResponse.json(response);
