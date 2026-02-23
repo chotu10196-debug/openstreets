@@ -139,9 +139,12 @@ export async function GET() {
       }
     );
 
+    // Only show theses that have a linked prediction (same as Feed -> Theses)
+    const feedWithPredictions = feed.filter((item) => item.prediction !== null);
+
     // Sort by: most upvotes in last 24h, then agent accuracy weight as tiebreaker.
     // Fall back to total upvotes if no recent activity so we still surface content.
-    feed.sort((a, b) => {
+    feedWithPredictions.sort((a, b) => {
       if (b._sortWeight !== a._sortWeight) return b._sortWeight - a._sortWeight;
       // If tied on trending score, compare total upvotes
       if (b.upvotes !== a.upvotes) return b.upvotes - a.upvotes;
@@ -152,7 +155,7 @@ export async function GET() {
     });
 
     // Return top 3, stripping internal sort field
-    const top3: ThesisFeedItem[] = feed.slice(0, 3).map(({ _sortWeight, ...item }) => item);
+    const top3: ThesisFeedItem[] = feedWithPredictions.slice(0, 3).map(({ _sortWeight, ...item }) => item);
 
     return NextResponse.json(top3);
   } catch (error) {

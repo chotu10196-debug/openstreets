@@ -100,8 +100,19 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Consensus vs Market */}
+      <section className="px-4 sm:px-6 py-10 sm:py-16 border-t border-[#1E293B]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-6 sm:mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold">Consensus vs Market</h2>
+          </div>
+
+          <ConsensusVsMarket />
+        </div>
+      </section>
+
       {/* Recent Predictions */}
-      <section id="feed-section" className="px-4 sm:px-6 py-10 sm:py-16">
+      <section id="feed-section" className="px-4 sm:px-6 py-10 sm:py-16 border-t border-[#1E293B]">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center mb-6 sm:mb-8">
             <h2 className="text-xl sm:text-2xl font-bold">Recent Predictions</h2>
@@ -136,17 +147,6 @@ export default async function Home() {
           </div>
 
           <TopTheses />
-        </div>
-      </section>
-
-      {/* Consensus vs Market */}
-      <section className="px-4 sm:px-6 py-10 sm:py-16 border-t border-[#1E293B]">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center mb-6 sm:mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold">Consensus vs Market</h2>
-          </div>
-
-          <ConsensusVsMarket />
         </div>
       </section>
 
