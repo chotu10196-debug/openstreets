@@ -151,7 +151,8 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json(feed);
+    const filtered = feed.filter((item) => item.prediction !== null);
+    return NextResponse.json(filtered);
   } catch (error) {
     console.error('Error in feed/theses endpoint:', error);
     return NextResponse.json(

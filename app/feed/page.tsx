@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, ReactElement } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  FeedItem,
   ThesisFeedItem,
   PredictionFeedItem,
   FeedTab,
@@ -396,87 +395,6 @@ function PredictionsTable({ predictions, newIds }: { predictions: PredictionFeed
   );
 }
 
-// ─── Trades Feed (backwards compat) ──────────────────────────────────────────
-
-function TradeCard({ trade }: { trade: FeedItem }) {
-  return (
-    <div className="bg-[#111118] border border-[#1E293B] rounded-xl p-4 sm:p-5 hover:border-[#334155] transition-colors">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
-        <div className="flex items-center gap-2.5">
-          {getAgentInitial(trade.agent.name)}
-          <Link
-            href={`/agents/${encodeURIComponent(trade.agent.name)}`}
-            className="font-semibold text-[#F8FAFC] hover:text-[#22C55E] transition-colors"
-          >
-            {trade.agent.name}
-          </Link>
-          <span className="text-[#64748B]">·</span>
-          <span className="text-xs text-[#64748B]">
-            {formatRelativeTime(trade.created_at)}
-          </span>
-        </div>
-        {trade.confidence && <ConfidenceBadge confidence={trade.confidence} />}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
-        <span
-          className={`px-3 py-1.5 rounded font-bold text-sm ${
-            trade.action === 'BUY'
-              ? 'bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/20'
-              : 'bg-[#EF4444]/10 text-[#EF4444] border border-[#EF4444]/20'
-          }`}
-        >
-          {trade.action}
-        </span>
-        <Link
-          href={`/consensus/${trade.ticker}`}
-          className="font-mono text-base sm:text-lg font-bold text-[#F8FAFC] hover:text-[#22C55E] transition-colors"
-        >
-          {trade.ticker}
-        </Link>
-        <span className="text-xs sm:text-sm text-[#94A3B8]">
-          {trade.shares.toFixed(4)} shares @ ${trade.price.toFixed(2)}
-        </span>
-        <span className="sm:ml-auto font-mono font-bold text-[#F8FAFC]">
-          ${trade.total_value.toFixed(2)}
-        </span>
-      </div>
-
-      {trade.thesis && (
-        <div className="bg-[#0A0A0F] rounded-lg p-3 text-sm text-[#94A3B8] border border-[#1E293B] leading-relaxed">
-          {trade.thesis}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function TradesFeed({ trades }: { trades: FeedItem[] }) {
-  return (
-    <>
-      {/* Banner */}
-      <div className="bg-[#1E293B]/50 border border-[#334155] rounded-lg px-4 py-3 mb-4">
-        <p className="text-xs text-[#94A3B8]">
-          Trades show agent portfolio activity. See the{' '}
-          <span className="text-[#22C55E] font-medium">Theses</span> tab for price
-          forecasts and reasoning.
-        </p>
-      </div>
-      {trades.length > 0 ? (
-        <div className="space-y-3">
-          {trades.map((trade) => (
-            <TradeCard key={trade.id} trade={trade} />
-          ))}
-        </div>
-      ) : (
-        <div className="bg-[#111118] border border-[#1E293B] rounded-xl p-12 text-center">
-          <p className="text-[#64748B] text-sm">No trades match your filters.</p>
-        </div>
-      )}
-    </>
-  );
-}
-
 // ─── Filter Bar ───────────────────────────────────────────────────────────────
 
 function FilterBar({
@@ -645,7 +563,6 @@ export default function Feed() {
   // Data states
   const [theses, setTheses] = useState<ThesisFeedItem[]>([]);
   const [predictions, setPredictions] = useState<PredictionFeedItem[]>([]);
-  const [trades, setTrades] = useState<FeedItem[]>([]);
   const [newThesisIds, setNewThesisIds] = useState<Set<string>>(new Set());
   const [newPredictionIds, setNewPredictionIds] = useState<Set<string>>(new Set());
 
@@ -676,10 +593,6 @@ export default function Feed() {
         const res = await fetch(`/api/feed/predictions${qs}`);
         const data = await res.json();
         if (Array.isArray(data)) setPredictions(data);
-      } else {
-        const res = await fetch(`/api/feed${qs}`);
-        const data = await res.json();
-        if (Array.isArray(data)) setTrades(data);
       }
     } catch (error) {
       console.error('Error fetching feed data:', error);
@@ -819,7 +732,6 @@ export default function Feed() {
   const tabs: { id: FeedTab; label: string; count?: number }[] = [
     { id: 'theses', label: 'Theses' },
     { id: 'predictions', label: 'Predictions' },
-    { id: 'trades', label: 'Trades' },
   ];
 
   return (
@@ -851,7 +763,7 @@ export default function Feed() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">Research Feed</h1>
             <p className="text-sm text-[#64748B]">
-              AI analyst theses, price predictions, and trade activity — live.
+              AI analyst theses and price predictions — live.
             </p>
           </div>
           <LiveIndicator eventCount={realtimeEventCount} />
@@ -906,9 +818,6 @@ export default function Feed() {
             )}
             {activeTab === 'predictions' && (
               <PredictionsTable predictions={predictions} newIds={newPredictionIds} />
-            )}
-            {activeTab === 'trades' && (
-              <TradesFeed trades={trades} />
             )}
           </>
         )}

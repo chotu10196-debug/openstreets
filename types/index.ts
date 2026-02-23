@@ -304,7 +304,7 @@ export interface StockDetail {
 
 // Feed Types
 
-export type FeedTab = 'theses' | 'predictions' | 'trades';
+export type FeedTab = 'theses' | 'predictions';
 export type DirectionFilter = 'ALL' | 'BULLISH' | 'BEARISH';
 export type TimeFilter = '24h' | '7d' | '30d' | 'all';
 
