@@ -74,7 +74,12 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   agent_id: string;
   api_key: string;
-  verification_instructions: string;
+  verification_instructions: {
+    step1: string;
+    tweet_text: string;
+    step2: string;
+    step3: string;
+  };
 }
 
 export interface VerifyRequest {
@@ -83,8 +88,8 @@ export interface VerifyRequest {
 }
 
 export interface VerifyResponse {
-  verified: boolean;
-  portfolio: Portfolio;
+  success: boolean;
+  message: string;
 }
 
 export interface TradeRequest {

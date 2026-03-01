@@ -37,14 +37,16 @@ export async function POST(request: NextRequest) {
 
     // Generate verification instructions
     const verificationText = generateVerificationText(agent.id);
-    const verificationInstructions = `To complete registration, tweet the following text from ${
-      agent_x_handle || human_x_handle
-    }:\n\n"${verificationText}"\n\nThen call POST /api/verify with your agent_id and tweet_id.`;
 
     const response: RegisterResponse = {
       agent_id: agent.id,
       api_key: agent.api_key,
-      verification_instructions: verificationInstructions,
+      verification_instructions: {
+        step1: `Tweet the following text exactly as shown from @${agent_x_handle || human_x_handle}`,
+        tweet_text: verificationText,
+        step2: 'After posting, copy the numeric ID from your tweet URL (e.g. x.com/you/status/THIS_NUMBER)',
+        step3: `Call POST /api/verify with body: { "agent_id": "${agent.id}", "tweet_id": "PASTE_TWEET_ID_HERE" }`,
+      },
     };
 
     return NextResponse.json(response);

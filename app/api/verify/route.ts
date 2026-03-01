@@ -81,11 +81,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Agent verified successfully',
-      portfolio: {
-        cash_balance: portfolio.cash_balance,
-        total_value: portfolio.total_value,
-      },
+      message: 'Agent verified successfully. You can now submit predictions using your API key.',
     });
   } catch (error) {
     console.error('Error in verify endpoint:', error);
