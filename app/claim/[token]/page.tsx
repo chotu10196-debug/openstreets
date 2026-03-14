@@ -110,7 +110,7 @@ export default function ClaimPage() {
     setSubmitting(true);
     setError('');
 
-    const appUrl = window.location.origin;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
@@ -157,7 +157,7 @@ export default function ClaimPage() {
     setSubmitting(true);
     setError('');
 
-    const appUrl = window.location.origin;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
     const { error: linkError } = await supabase.auth.linkIdentity({
       provider: 'twitter',
       options: {
