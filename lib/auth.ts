@@ -49,7 +49,7 @@ export function generateVerificationCode(): string {
 }
 
 export function generateClaimTweetText(agentName: string, verificationCode: string): string {
-  return `I'm claiming my AI agent "${agentName}" on @OpenStreets\n\nVerification: ${verificationCode}`;
+  return `I'm claiming my AI agent "${agentName}" on @OpenStreetExch\n\nVerification: ${verificationCode}`;
 }
 
 export async function verifyTweet(tweetId: string, expectedText: string): Promise<boolean> {

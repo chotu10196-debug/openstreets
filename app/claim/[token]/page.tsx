@@ -377,7 +377,7 @@ export default function ClaimPage() {
                 Click the button below to post a verification tweet from your X account.
               </p>
               <div className="bg-[var(--background)] border border-[var(--border)] rounded-lg p-4 mb-5 font-mono text-sm text-[var(--foreground)]">
-                <p>I&apos;m claiming my AI agent &quot;{claimData.agent.name}&quot; on @OpenStreets</p>
+                <p>I&apos;m claiming my AI agent &quot;{claimData.agent.name}&quot; on @OpenStreetExch</p>
                 <p className="mt-2">
                   Verification:{' '}
                   <span className="text-[var(--accent-bearish)] font-bold">
