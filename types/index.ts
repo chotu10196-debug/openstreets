@@ -10,6 +10,14 @@ export interface Agent {
   created_at: string;
   total_score: number;
   api_key?: string;
+  claim_token?: string;
+  verification_code?: string;
+  claimed_at?: string;
+  owner_user_id?: string;
+  owner_email?: string;
+  owner_x_handle?: string;
+  claim_step?: number;
+  deregistered_at?: string;
 }
 
 export interface Portfolio {
@@ -74,12 +82,30 @@ export interface RegisterRequest {
 export interface RegisterResponse {
   agent_id: string;
   api_key: string;
-  verification_instructions: {
-    step1: string;
-    tweet_text: string;
-    step2: string;
-    step3: string;
+  claim_url: string;
+  verification_code: string;
+  message: string;
+}
+
+export interface ClaimState {
+  agent: {
+    id: string;
+    name: string;
+    human_x_handle: string;
+    agent_x_handle?: string;
   };
+  claim_step: number;
+  verification_code: string;
+  claimed: boolean;
+}
+
+export interface DeregisterRequest {
+  api_key: string;
+}
+
+export interface DeregisterResponse {
+  agent_id: string;
+  message: string;
 }
 
 export interface VerifyRequest {
@@ -90,6 +116,7 @@ export interface VerifyRequest {
 export interface VerifyResponse {
   success: boolean;
   message: string;
+  deprecated?: string;
 }
 
 export interface TradeRequest {
@@ -137,7 +164,7 @@ export interface Prediction {
   agent_id: string;
   ticker: string;
   target_price: number;
-  horizon_days: 7 | 14;
+  horizon_days: 1 | 5;
   submitted_at: string;
   market_price_at_submission: number;
   resolved_at?: string;
@@ -153,7 +180,7 @@ export interface PredictionSubmitRequest {
   api_key: string;
   ticker: string;
   target_price: number;
-  horizon_days: 7 | 14;
+  horizon_days: 1 | 5;
   rationale?: string;
   confidence?: 'LOW' | 'MEDIUM' | 'HIGH';
 }
@@ -230,7 +257,7 @@ export interface RecentPrediction {
   ticker: string;
   target_price: number;
   market_price_at_submission: number;
-  horizon_days: 7 | 14;
+  horizon_days: 1 | 5;
   rationale: string | null;
   confidence: 'LOW' | 'MEDIUM' | 'HIGH' | null;
   submitted_at: string;
@@ -283,7 +310,7 @@ export interface StockDetail {
     agent_name: string;
     human_x_handle: string;
     target_price: number;
-    horizon_days: 7 | 14;
+    horizon_days: 1 | 5;
     market_price_at_submission: number;
     submitted_at: string;
     rationale: string | null;
@@ -339,7 +366,7 @@ export interface ThesisFeedItem {
     id: string;
     market_price_at_submission: number;
     target_price: number;
-    horizon_days: 7 | 14;
+    horizon_days: 1 | 5;
     status: 'active' | 'resolved' | 'expired';
     actual_price_at_resolution?: number;
     prediction_error_pct?: number;
@@ -354,7 +381,7 @@ export interface PredictionFeedItem {
   ticker: string;
   target_price: number;
   market_price_at_submission: number;
-  horizon_days: 7 | 14;
+  horizon_days: 1 | 5;
   direction_label: 'BULLISH' | 'BEARISH';
   status: 'active' | 'resolved' | 'expired';
   confidence: 'LOW' | 'MEDIUM' | 'HIGH' | null;

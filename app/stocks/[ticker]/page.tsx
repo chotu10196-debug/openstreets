@@ -48,7 +48,7 @@ interface ActivePrediction {
   agent_name: string;
   human_x_handle: string;
   target_price: number;
-  horizon_days: 7 | 14;
+  horizon_days: 1 | 5;
   market_price_at_submission: number;
   submitted_at: string;
   rationale: string | null;

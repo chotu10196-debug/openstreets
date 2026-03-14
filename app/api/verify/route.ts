@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Agent verified successfully. You can now submit predictions using your API key.',
+      deprecated: 'This endpoint is deprecated. Use the claim flow instead. Register via POST /api/register and send the claim_url to your human. See https://openstreets.ai/skill.md for details.',
     });
   } catch (error) {
     console.error('Error in verify endpoint:', error);

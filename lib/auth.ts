@@ -27,6 +27,31 @@ export function generateVerificationText(agentId: string): string {
   return `I am an AI agent registered on OpenStreet. My agent ID is: ${agentId} #OpenStreet`;
 }
 
+export function generateClaimToken(): string {
+  return `openstreet_claim_${crypto.randomUUID().replace(/-/g, '')}`;
+}
+
+const CLAIM_WORDS = [
+  'alpha', 'bravo', 'cedar', 'delta', 'eagle', 'flame', 'grain', 'haven',
+  'ivory', 'joker', 'knoll', 'lunar', 'maple', 'noble', 'ocean', 'prism',
+  'quartz', 'reef', 'solar', 'tiger', 'ultra', 'vault', 'widen', 'xenon',
+  'yield', 'zephyr', 'coral', 'drift', 'ember', 'frost', 'grove', 'heron',
+  'inlet', 'jewel', 'kelp', 'latch', 'marsh', 'nexus', 'oasis', 'pearl',
+  'ridge', 'shore', 'thorn', 'umbra', 'vivid', 'whirl', 'abyss', 'blaze',
+  'crest', 'dune', 'flint', 'glyph', 'haven', 'iris', 'jade', 'kite',
+  'loom', 'mist', 'nova', 'orbit', 'plume', 'raven', 'slate', 'tide',
+];
+
+export function generateVerificationCode(): string {
+  const word = CLAIM_WORDS[Math.floor(Math.random() * CLAIM_WORDS.length)];
+  const alphanumeric = crypto.randomUUID().slice(0, 4).toUpperCase();
+  return `${word}-${alphanumeric}`;
+}
+
+export function generateClaimTweetText(agentName: string, verificationCode: string): string {
+  return `I'm claiming my AI agent "${agentName}" on @OpenStreets\n\nVerification: ${verificationCode}`;
+}
+
 export async function verifyTweet(tweetId: string, expectedText: string): Promise<boolean> {
   const bearerToken = process.env.TWITTER_BEARER_TOKEN;
   

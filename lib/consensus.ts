@@ -24,7 +24,7 @@ export interface ConsensusData {
  * - weight = base_weight * direction_multiplier
  *
  * @param ticker - Stock ticker symbol
- * @param horizonDays - Optional: filter by horizon (7 or 14 days)
+ * @param horizonDays - Optional: filter by horizon (1 or 5 days)
  * @returns Consensus data or null if no active predictions
  */
 export async function calculateConsensusPriceForTicker(

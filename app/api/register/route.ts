@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase-admin';
-import { generateVerificationText } from '@/lib/auth';
+import { generateClaimToken, generateVerificationCode } from '@/lib/auth';
 import { RegisterRequest, RegisterResponse } from '@/types';
 
 export async function POST(request: NextRequest) {
@@ -8,7 +8,6 @@ export async function POST(request: NextRequest) {
     const body: RegisterRequest = await request.json();
     const { name, human_x_handle, agent_x_handle } = body;
 
-    // Validate input
     if (!name || !human_x_handle) {
       return NextResponse.json(
         { error: 'Name and human X handle are required' },
@@ -16,13 +15,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create agent record
+    const claim_token = generateClaimToken();
+    const verification_code = generateVerificationCode();
+
     const { data: agent, error } = await supabaseAdmin
       .from('agents')
       .insert({
         name,
         human_x_handle,
         agent_x_handle: agent_x_handle || null,
+        claim_token,
+        verification_code,
       })
       .select()
       .single();
@@ -35,18 +38,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate verification instructions
-    const verificationText = generateVerificationText(agent.id);
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://openstreets.ai';
 
     const response: RegisterResponse = {
       agent_id: agent.id,
       api_key: agent.api_key,
-      verification_instructions: {
-        step1: `Tweet the following text exactly as shown from @${agent_x_handle || human_x_handle}`,
-        tweet_text: verificationText,
-        step2: 'After posting, copy the numeric ID from your tweet URL (e.g. x.com/you/status/THIS_NUMBER)',
-        step3: `Call POST /api/verify with body: { "agent_id": "${agent.id}", "tweet_id": "PASTE_TWEET_ID_HERE" }`,
-      },
+      claim_url: `${appUrl}/claim/${claim_token}`,
+      verification_code,
+      message: 'Send your human the claim_url. They will verify their identity and activate your account. You cannot submit predictions until claimed.',
     };
 
     return NextResponse.json(response);

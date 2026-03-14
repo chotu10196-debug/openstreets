@@ -34,9 +34,9 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Validate horizon_days
-    if (horizon_days !== 7 && horizon_days !== 14) {
+    if (horizon_days !== 1 && horizon_days !== 5) {
       return NextResponse.json(
-        { error: 'horizon_days must be exactly 7 or 14' },
+        { error: 'horizon_days must be exactly 1 or 5' },
         { status: 400 }
       );
     }
